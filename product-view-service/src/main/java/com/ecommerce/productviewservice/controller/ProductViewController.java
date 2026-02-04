@@ -1,8 +1,8 @@
 package com.ecommerce.productviewservice.controller;
 
 import com.ecommerce.productviewservice.dto.ProductViewDTO;
-import com.ecommerce.productviewservice.entity.ProductView;
 import com.ecommerce.productviewservice.service.ProductViewService;
+import com.ecommerce.shared.entity.ProductView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;

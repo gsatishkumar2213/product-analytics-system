@@ -1,6 +1,7 @@
 package com.ecommerce.productviewservice.dto;
 
-import com.ecommerce.productviewservice.entity.DeviceType;
+
+import com.ecommerce.shared.entity.DeviceType;
 
 public record ProductViewDTO(Long productId,
                              String productName,

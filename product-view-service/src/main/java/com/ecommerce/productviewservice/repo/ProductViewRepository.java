@@ -1,7 +1,8 @@
 package com.ecommerce.productviewservice.repo;
 
-import com.ecommerce.productviewservice.entity.DeviceType;
-import com.ecommerce.productviewservice.entity.ProductView;
+
+import com.ecommerce.shared.entity.DeviceType;
+import com.ecommerce.shared.entity.ProductView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
