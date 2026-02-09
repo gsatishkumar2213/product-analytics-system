@@ -44,6 +44,10 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.ecommerce</groupId>
             <artifactId>shared-models</artifactId>
             <version>1.0-SNAPSHOT</version>
@@ -55,18 +59,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- FIX: This was missing, causing JUnit/SpringBootTest errors -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-kafka-test</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>

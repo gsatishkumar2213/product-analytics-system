@@ -22,7 +22,7 @@ public class ProductViewProducer {
     public CompletableFuture<SendResult<String, ProductView>> produceProductView(ProductView productView) {
         log.info("ProductViewProducer is producing a message {}:", productView);
         CompletableFuture<SendResult<String, ProductView>> result = kafkaTemplate.send("product" +
-                "-view", productView.getId().toString(), productView);
+                "-view", productView.getProductId().toString(), productView);
         result.thenAccept(sendResult -> {
             log.info("Successfully produced to product-view");
         }).exceptionally(ex -> {
