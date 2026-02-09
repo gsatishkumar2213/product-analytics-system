@@ -1,84 +1,117 @@
-# Product Analytics System
+# Real-Time Product Analytics with Kafka Streams
 
-A microservices-based event-driven system for tracking and analyzing product views using Apache Kafka and Kafka Streams.
+A microservices system demonstrating advanced Kafka Streams patterns for real-time event processing
+and enrichment.
 
-## Services
+## What It Does
 
-### product-view-service
-REST API microservice that tracks product views and publishes events to Kafka.
-- **Tech:** Spring Boot, PostgreSQL, Kafka Producer
-- **Port:** 9095
-- **API:** `POST /product-view`
+Tracks product views and performs real-time analytics using Kafka Streams:
 
-### product-analytics-service (Coming Soon)
-Kafka Streams consumer that processes product view events and generates analytics.
-- **Tech:** Spring Boot, Kafka Streams
-- **Input Topic:** product-view
-- **Output Topic:** product-trends
+- **Windowed Aggregations**: Count views per product in 5-minute windows
+- **Stream-Table Joins**: Enrich view events with product catalog data
+- **Multiple Topologies**: Parallel processing paths from same input stream
 
-## Tech Stack
+## Architecture
 
-- Java 21
-- Spring Boot 3.2.1
-- Apache Kafka 4.1.1
-- PostgreSQL
-- Docker
-
-## Getting Started
-
-### Prerequisites
-- Java 21
-- PostgreSQL
-- Apache Kafka
-- Docker (optional)
-
-### Setup
-
-1. Create databases:
-```bash
-createdb product_view_db
+```
+Product View API → Kafka → Kafka Streams → Analytics
+                              ├─> Windowed counts
+                              └─> Enriched events (with product details)
 ```
 
-2. Start Kafka (if not running):
-```bash
-./bin/kafka-server-start.sh ./config/server.properties
-```
+## Example: Stream-Table Join
 
-3. Start product-view-service:
-```bash
-cd product-view-service
-mvn spring-boot:run
-```
+**Input Event:**
 
-### API Usage
-
-POST `/product-view`
 ```json
 {
   "productId": 1,
-  "productName": "Laptop Pro",
-  "category": "Electronics",
-  "deviceType": "DESKTOP",
-  "userId": "user123"
+  "userId": "user123",
+  "viewedAt": "2026-02-08T21:10:03"
 }
 ```
 
-## Architecture
-```
-REST API (product-view-service)
-    ↓
-PostgreSQL (persistence)
-    ↓
-Kafka Topic (product-view)
-    ↓
-Kafka Streams (product-analytics-service) [Coming Soon]
-    ↓
-Output Topic (product-trends)
+**After Join (enriched with catalog data):**
+
+```json
+{
+  "productId": 1,
+  "name": "Wireless Mouse",
+  "price": 29.99,
+  "userId": "user123",
+  "viewedAt": "2026-02-08T21:10:03"
+}
 ```
 
-## Key Features
+## Tech Stack
 
-- ✅ Async Kafka publishing
-- ✅ Event-driven architecture
-- ✅ Stateful stream processing (coming)
-- ✅ Docker containerization
+Java 21 • Spring Boot • Kafka Streams • PostgreSQL
+
+## Key Patterns Demonstrated
+
+- KStream vs KTable semantics
+- Stateful aggregations with time windows
+- Stream-table joins for enrichment
+- Custom JSON Serdes
+- Programmatic topic creation (AdminClient)
+
+## Quick Start
+
+1. **Start Kafka:**
+
+```bash
+   cd kafka_2.13-4.1.1
+   ./bin/kafka-server-start.sh ./config/kraft/server.properties
+```
+
+2. **Create database:**
+
+```bash
+   createdb product_view_db
+```
+
+3. **Run services:**
+
+```bash
+   # Terminal 1: Analytics Service
+   cd product-analytics-service && mvn spring-boot:run
+   
+   # Terminal 2: View Service
+   cd product-view-service && mvn spring-boot:run
+```
+
+4. **Test the system:**
+
+```bash
+   curl -X POST http://localhost:9095/product-view \
+     -H "Content-Type: application/json" \
+     -d '{
+       "productId": 1,
+       "productName": "Test Product",
+       "category": "Electronics",
+       "deviceType": "DESKTOP",
+       "userId": "user123"
+     }'
+```
+
+5. **View enriched events:**
+
+```bash
+   ./bin/kafka-console-consumer.sh \
+     --bootstrap-server localhost:9092 \
+     --topic enriched-product-view \
+     --from-beginning \
+     --property print.key=true
+```
+
+## Services
+
+**product-view-service** (Port 9095): REST API for tracking product views  
+**product-analytics-service** (Port 9096): Kafka Streams real-time processing
+
+## What I Learned
+
+- Real-time event enrichment patterns
+- Windowing and stateful stream processing
+- Join semantics in distributed systems
+- Event-driven microservices architecture
